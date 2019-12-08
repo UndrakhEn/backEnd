@@ -10,10 +10,10 @@ const db = require('./src/utils/db').database;
 mongoose
   .connect(db, { useNewUrlParser: true })
   .then(() => {
-    console.log('database succesfully');
+    console.log('Database succesfully');
   })
   .catch(err => {
-    console.log('unsuccesfully ', err);
+    console.log('Unsuccesfully ', err);
   });
 
 const port = process.env.PORT || 3000;
@@ -32,7 +32,7 @@ const router = require('./src/routes/_index');
 app.use('/api/', router);
 
 app.listen(port, () => {
-  console.log('serve started on port', port);
+  console.log('Serve started on port', port);
 });
 
 //initialize public directory

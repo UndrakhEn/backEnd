@@ -1,34 +1,29 @@
 const mongoose = require('mongoose');
 
-const PostSchema = mongoose.Schema({
+const UsersSchema = mongoose.Schema({
   id: {
     type: String,
     require: true
   },
-  users_id: {
+  own_code: {
     type: String,
     require: true
   },
-  created_date: {
-    type: Date,
-    require: Date.now
-  },
-  body: {
+  f_name: {
     type: String,
     require: true
   },
-  status: {
-    type: Boolean,
-    require: true
-  },
-  perfor_code: {
+  l_name: {
     type: String,
     require: true
   },
-  post_type: {
+  password: {
+    type: String,
+    require: true
+  },
+  type_code: {
     type: String,
     require: true
   }
 });
-
-const Post = (module.exports = mongoose.model('posts', PostSchema));
+const User = (module.exports = mongoose.model('users', UsersSchema));
