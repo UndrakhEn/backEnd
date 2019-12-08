@@ -1,16 +1,12 @@
 const Post = require('../models/post');
-
+const message = require('../utils/message');
 const get = (req, res) => {
   Post.find()
     .then(posts => {
-      return res.json(posts);
+      return res.json(message.SUCCESS(posts));
     })
     .catch(err => {
-      console.log(err);
-      return res.json({
-        status: 'error',
-        message: 'post get hvselt amjiltgvi'
-      });
+      return res.json(message.ERROR);
     });
 };
 
@@ -27,18 +23,11 @@ const create = (req, res) => {
   newPost
     .save()
     .then(post => {
-      res.send({
-        message: 'create post successfully',
-        status: 'success',
-        data: post
-      });
+      res.send(message.SUCCESS(post));
     })
     .catch(err => {
       console.log(err);
-      return res.json({
-        status: 'error',
-        message: 'create post unsuccessfully'
-      });
+      return res.json(message.ERROR);
     });
 };
 
@@ -55,26 +44,14 @@ const update = (req, res) => {
       post
         .save()
         .then(post => {
-          res.send({
-            message: 'post update successfully',
-            status: 'success',
-            data: post
-          });
+          res.send(message.SUCCESS(post));
         })
         .catch(err => {
-          console.log(err);
-          return res.json({
-            status: 'error',
-            message: 'post update unsuccessfully'
-          });
+          return res.json(message.ERROR);
         });
     })
     .catch(err => {
-      console.log(err);
-      return res.json({
-        status: 'error',
-        message: 'post not found'
-      });
+      return res.json(message.NOT_FOUND);
     });
 };
 
@@ -85,26 +62,16 @@ const deletee = (req, res) => {
       post
         .delete()
         .then(post => {
-          res.send({
-            message: 'post delete successfully',
-            status: 'success',
-            data: post
-          });
+          res.send(message.SUCCESS(post));
         })
         .catch(err => {
           console.log(err);
-          return res.json({
-            status: 'error',
-            message: 'post delete unsuccessfully'
-          });
+          return res.json(message.ERROR);
         });
     })
     .catch(err => {
       console.log(err);
-      return res.json({
-        status: 'error',
-        message: 'post not found'
-      });
+      return res.json(message.NOT_FOUND);
     });
 };
 

@@ -4,11 +4,11 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
 const app = express();
-const db = require('./src/utils/db').database;
+const config = require('./src/utils/config');
 
 // database connection
 mongoose
-  .connect(db, { useNewUrlParser: true })
+  .connect(config.DB, { useNewUrlParser: true })
   .then(() => {
     console.log('Database succesfully');
   })
@@ -16,7 +16,7 @@ mongoose
     console.log('Unsuccesfully ', err);
   });
 
-const port = process.env.PORT || 3000;
+// const port = process.env.PORT || 3000;
 
 //initialize cors middleware
 app.use(cors());
@@ -31,8 +31,8 @@ app.use(bodyParser.json());
 const router = require('./src/routes/_index');
 app.use('/api/', router);
 
-app.listen(port, () => {
-  console.log('Serve started on port', port);
+app.listen(config.PORT, () => {
+  console.log('Serve started on port', config.PORT);
 });
 
 //initialize public directory

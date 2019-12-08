@@ -1,16 +1,13 @@
 const Comment = require('../models/comments');
+const message = require('../utils/message');
 
 const get = (req, res) => {
   Comment.find()
     .then(comments => {
-      return res.json(comments);
+      return res.json(message.SUCCESS(comments));
     })
     .catch(err => {
-      console.log(err);
-      return res.json({
-        status: 'error',
-        message: 'comment get hvselt amjiltgvi'
-      });
+      return res.json(message.ERROR);
     });
 };
 
@@ -25,18 +22,11 @@ const create = (req, res) => {
   newComm
     .save()
     .then(comment => {
-      res.json({
-        status: 'success',
-        message: 'comment create ajilttai',
-        data: comment
-      });
+      res.json(message.SUCCESS(comment));
     })
     .catch(err => {
       console.log(err);
-      return res.json({
-        status: 'error',
-        message: 'create comment amjiltgvi'
-      });
+      return res.json(message.ERROR);
     });
 };
 
@@ -51,26 +41,16 @@ const update = (req, res) => {
       comment
         .save()
         .then(data => {
-          res.send({
-            message: 'comment update successfully',
-            status: 'success',
-            data: data
-          });
+          res.send(message.SUCCESS(data));
         })
         .catch(err => {
           console.log(err);
-          return res.json({
-            status: 'error',
-            message: 'comment update hiij chadsngvi'
-          });
+          return res.json(message.ERROR);
         });
     })
     .catch(err => {
       console.log(err);
-      return res.json({
-        status: 'error',
-        message: 'comment not found'
-      });
+      return res.json(message.NOT_FOUND);
     });
 };
 
@@ -81,26 +61,16 @@ const deletee = (req, res) => {
       comment
         .delete()
         .then(comment => {
-          res.send({
-            message: 'comment delete successfully',
-            status: 'success',
-            data: comment
-          });
+          res.send(message.SUCCESS(comment));
         })
         .catch(err => {
           console.log(err);
-          return res.json({
-            status: 'error',
-            message: 'comment delete unsuccessfully'
-          });
+          return res.json(message.ERROR);
         });
     })
     .catch(err => {
       console.log(err);
-      return res.json({
-        status: 'error',
-        message: 'comment not found'
-      });
+      return res.json(message.NOT_FOUND);
     });
 };
 
