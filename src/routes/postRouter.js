@@ -4,10 +4,10 @@ const postControllers = require('../controllers/postController');
 //get all the posts
 router.get('/post/get', postControllers.getPost);
 //create a posts
-router.post('/post/create', postControllers.post);
+router.post('/post/create', postControllers.createPost);
 // to update a post
-router.put('/post/update/:id', postControllers.update);
+router.post('/post/update', postControllers.update);
 //make delete
-router.delete('/post/delete/:id', postControllers.deletePost);
+router.post('/post/delete', postControllers.deletePost);
 
 module.exports = router;

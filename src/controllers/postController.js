@@ -1,6 +1,6 @@
-const Post = require('../models/Post');
+const Post = require('../models/post');
 
-const getPost = (req, res, next) => {
+const getPost = (req, res) => {
   Post.find()
     .then(posts => {
       return res.json(posts);
@@ -8,13 +8,15 @@ const getPost = (req, res, next) => {
     .catch(err => console.log(err));
 };
 
-const post = (req, res, next) => {
+const createPost = (req, res) => {
   console.log(req.body);
-  const title = req.body.title;
-  const body = req.body.body;
   newPost = new Post({
-    title: title,
-    body: body
+    users_id: req.body.user_id,
+    created_date: Date.now(),
+    body: req.body.body,
+    status: req.body.status,
+    perfor_code: req.body.perfor_code,
+    post_type: req.body.post_type
   });
   newPost
     .save()
@@ -24,8 +26,8 @@ const post = (req, res, next) => {
     .catch(err => console.log(err));
 };
 
-const update = (req, res, next) => {
-  let id = req.params.id;
+const update = (req, res) => {
+  let id = req.body.id;
   Post.findById(id)
     .then(post => {
       post.title = req.body.title;
@@ -44,8 +46,8 @@ const update = (req, res, next) => {
     .catch(err => console.log(err));
 };
 
-const deletePost = (req, res, next) => {
-  let id = req.params.id;
+const deletePost = (req, res) => {
+  let id = req.body.id;
   Post.findById(id)
     .then(post => {
       post
@@ -64,7 +66,7 @@ const deletePost = (req, res, next) => {
 
 module.exports = {
   getPost,
-  post,
+  createPost,
   update,
   deletePost
 };
