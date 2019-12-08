@@ -2,12 +2,12 @@ const router = require('express').Router();
 const postControllers = require('../controllers/postController');
 
 //get all the posts
-router.get('/post/get', postControllers.getPost);
+router.get('/get', postControllers.get);
 //create a posts
-router.post('/post/create', postControllers.createPost);
+router.post('/create', postControllers.create);
 // to update a post
-router.post('/post/update', postControllers.update);
+router.post('/update', postControllers.update);
 //make delete
-router.post('/post/delete', postControllers.deletePost);
+router.post('/delete', postControllers.deletee);
 
 module.exports = router;

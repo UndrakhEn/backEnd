@@ -1,71 +1,67 @@
-const Post = require('../models/post');
+const Comment = require('../models/comments');
 
 const get = (req, res) => {
-  Post.find()
-    .then(posts => {
-      return res.json(posts);
+  Comment.find()
+    .then(comments => {
+      return res.json(comments);
     })
     .catch(err => {
       console.log(err);
       return res.json({
         status: 'error',
-        message: 'post get hvselt amjiltgvi'
+        message: 'comment get hvselt amjiltgvi'
       });
     });
 };
 
 const create = (req, res) => {
   console.log(req.body);
-  newPost = new Post({
-    users_id: req.body.user_id,
-    created_date: Date.now(),
+  newComm = new Comment({
     body: req.body.body,
-    status: req.body.status,
-    perfor_code: req.body.perfor_code,
-    post_type: req.body.post_type
+    created_date: Date.now(),
+    parent_id: req.body.parent_id,
+    post_id: req.body.post_id
   });
-  newPost
+  newComm
     .save()
-    .then(post => {
-      res.send({
-        message: 'create post successfully',
+    .then(comment => {
+      res.json({
         status: 'success',
-        data: post
+        message: 'comment create ajilttai',
+        data: comment
       });
     })
     .catch(err => {
       console.log(err);
       return res.json({
         status: 'error',
-        message: 'create post unsuccessfully'
+        message: 'create comment amjiltgvi'
       });
     });
 };
 
 const update = (req, res) => {
   let id = req.body.id;
-  Post.findById(id)
-    .then(post => {
-      post.users_id = req.body.user_id;
-      post.created_date = Date.now();
-      post.body = req.body.body;
-      post.status = req.body.status;
-      post.perfor_code = req.body.perfor_code;
-      post.post_type = req.body.post_type;
-      post
+  Comment.findById(id)
+    .then(comment => {
+      comment.body = req.body.body;
+      comment.created_date = Date.now();
+      comment.parent_id = req.body.parent_id;
+      comment.post_id = req.body.post_id;
+      comment
         .save()
-        .then(post => {
+        .then(data => {
           res.send({
-            message: 'post update successfully',
+            message: 'comment update successfully',
             status: 'success',
-            data: post
+            data: data
           });
         })
         .catch(err => {
           console.log(err);
           return res.json({
             status: 'error',
-            message: 'post update unsuccessfully'
+            message: 'comment update hiij chadsngvi'
           });
         });
     })
@@ -73,29 +69,29 @@ const update = (req, res) => {
       console.log(err);
       return res.json({
         status: 'error',
-        message: 'post not found'
+        message: 'comment not found'
       });
     });
 };
 
 const deletee = (req, res) => {
   let id = req.body.id;
-  Post.findById(id)
-    .then(post => {
-      post
+  Comment.findById(id)
+    .then(comment => {
+      comment
         .delete()
-        .then(post => {
+        .then(comment => {
           res.send({
-            message: 'post delete successfully',
+            message: 'comment delete successfully',
             status: 'success',
-            data: post
+            data: comment
           });
         })
         .catch(err => {
           console.log(err);
           return res.json({
             status: 'error',
-            message: 'post delete unsuccessfully'
+            message: 'comment delete unsuccessfully'
           });
         });
     })
@@ -103,7 +99,7 @@ const deletee = (req, res) => {
       console.log(err);
       return res.json({
         status: 'error',
-        message: 'post not found'
+        message: 'comment not found'
       });
     });
 };

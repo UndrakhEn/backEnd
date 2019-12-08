@@ -19,7 +19,7 @@ const CommentsSchema = mongoose.Schema({
   },
   created_date: {
     type: Date,
-    require: Date.now
+    require: true
   }
 });
 const Comment = (module.exports = mongoose.model('comments', CommentsSchema));
