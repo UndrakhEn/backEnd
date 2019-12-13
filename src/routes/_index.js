@@ -7,4 +7,7 @@ app.use('/post', postRouter);
 const commRouter = require('./commRouter');
 app.use('/comm', commRouter);
 
+const userRouter = require('./userRouter');
+app.use('/user', userRouter);
+
 module.exports = app;

@@ -10,6 +10,33 @@ const get = (req, res) => {
     });
 };
 
+const getId = (req, res) => {
+  let id = req.body.id;
+  Post.findById(id)
+    .then(post => {
+      return res.json(message.SUCCESS(post));
+    })
+    .catch(err => {
+      return res.json(message.NOT_FOUND);
+    });
+};
+
+const getUserIdAll = (req, res) => {
+  let user_id = req.body.users_id;
+  Post.find({ users_id: user_id })
+    .then(data => {
+      if (data.length > 0) {
+        return res.json(message.SUCCESS(data));
+      } else {
+        return res.json(message.NOT_FOUND);
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      return res.json(message.ERROR);
+    });
+};
+
 const create = (req, res) => {
   console.log(req.body);
   newPost = new Post({
@@ -23,7 +50,7 @@ const create = (req, res) => {
   newPost
     .save()
     .then(post => {
-      res.send(message.SUCCESS(post));
+      res.json(message.SUCCESS(post));
     })
     .catch(err => {
       console.log(err);
@@ -44,7 +71,7 @@ const update = (req, res) => {
       post
         .save()
         .then(post => {
-          res.send(message.SUCCESS(post));
+          res.json(message.SUCCESS(post));
         })
         .catch(err => {
           return res.json(message.ERROR);
@@ -62,7 +89,7 @@ const deletee = (req, res) => {
       post
         .delete()
         .then(post => {
-          res.send(message.SUCCESS(post));
+          res.json(message.SUCCESS(post));
         })
         .catch(err => {
           console.log(err);
@@ -77,6 +104,8 @@ const deletee = (req, res) => {
 
 module.exports = {
   get,
+  getId,
+  getUserIdAll,
   create,
   update,
   deletee

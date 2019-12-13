@@ -11,6 +11,59 @@ const get = (req, res) => {
     });
 };
 
+const getPostId = (req, res) => {
+  let postId = req.body.post_id;
+  Comment.find({ post_id: postId })
+    .then(comm => {
+      console.log(comm);
+      if (comm.length > 0) return res.json(message.SUCCESS(comm));
+      else return res.json(message.NOT_FOUND);
+    })
+    .catch(err => {
+      console.log(err);
+      return res.json(message.ERROR);
+    });
+};
+f0 = i => {
+  return new Promise(resolve => {
+    Comment.find({ parent_id: i._id }).then(data => {
+      resolve(data);
+    });
+  });
+};
+
+f1 = data => {
+  return new Promise(resolve => {
+    let xaxa = [];
+    data.forEach(async i => {
+      let data2 = await f0(i);
+      let obj = {
+        _id: i._id,
+        body: i.body,
+        created_date: i.created_date,
+        parent_id: i.parent_id,
+        post_id: i.post_id,
+        replies: data2
+      };
+      xaxa.push(obj);
+    });
+    console.log(xaxa);
+    resolve(xaxa);
+  });
+};
+const reply = (req, res) => {
+  let postId = req.body.post_id;
+  Comment.find({ post_id: postId, parent_id: '' })
+    .then(async comm => {
+      let shine = await f1(comm);
+      return res.json(message.SUCCESS(shine));
+    })
+    .catch(err => {
+      console.log(err);
+      res.json(message.ERROR);
+    });
+};
+
 const create = (req, res) => {
   console.log(req.body);
   newComm = new Comment({
@@ -41,7 +94,7 @@ const update = (req, res) => {
       comment
         .save()
         .then(data => {
-          res.send(message.SUCCESS(data));
+          res.json(message.SUCCESS(data));
         })
         .catch(err => {
           console.log(err);
@@ -61,7 +114,7 @@ const deletee = (req, res) => {
       comment
         .delete()
         .then(comment => {
-          res.send(message.SUCCESS(comment));
+          res.json(message.SUCCESS(comment));
         })
         .catch(err => {
           console.log(err);
@@ -77,6 +130,8 @@ const deletee = (req, res) => {
 module.exports = {
   get,
   create,
+  getPostId,
+  reply,
   update,
   deletee
 };

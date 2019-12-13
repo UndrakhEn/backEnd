@@ -3,6 +3,9 @@ const postControllers = require('../controllers/postController');
 
 //get all the posts
 router.get('/get', postControllers.get);
+router.get('/getId', postControllers.getId);
+router.get('/getUserIdAll', postControllers.getUserIdAll);
+
 //create a posts
 router.post('/create', postControllers.create);
 // to update a post
