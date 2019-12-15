@@ -5,8 +5,6 @@ const cors = require('cors');
 const path = require('path');
 const app = express();
 const config = require('./src/utils/config');
-
-// database connection
 mongoose
   .connect(config.DB, { useNewUrlParser: true })
   .then(() => {
@@ -16,17 +14,20 @@ mongoose
     console.log('Unsuccesfully ', err);
   });
 
-// const port = process.env.PORT || 3000;
-
-//initialize cors middleware
 app.use(cors());
-
-//initialize Bodyparser middleware
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', `http://localhost:4200`);
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type,' +
+      ' Accept, Authorization,authorization, Access-Control-Allow-Credentials'
+  );
+  res.header('Access-Control-Allow-Credentials', 'true');
+  next();
+});
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-// app.get('/', (req, res) => {
-//   res.send('<h1>Hellooooooo</h1>');
-// });
 
 const router = require('./src/routes/_index');
 app.use('/api/', router);
