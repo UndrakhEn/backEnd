@@ -1,20 +1,10 @@
 const User = require('../models/users');
 const message = require('../utils/message');
-
-const get = (req, res) => {
-  User.find()
-    .then(users => {
-      return res.json(message.SUCCESS(users));
-    })
-    .catch(err => {
-      return res.json(message.ERROR);
-    });
-};
-
+const { userTypes } = require('../utils/userTypes');
 const check = (req, res) => {
-  let name = req.body.own_code;
+  let code = req.body.own_code;
   let pass = req.body.password;
-  User.findOne({ own_code: name, password: pass }, (err, user) => {
+  User.findOne({ own_code: code, password: pass }, (err, user) => {
     if (err) {
       console.log(err);
       return res.json(message.ERROR);
@@ -25,14 +15,27 @@ const check = (req, res) => {
     return res.json(message.SUCCESS(user));
   });
 };
+
 const create = (req, res) => {
-  console.log(req.body);
+  let a = '',
+    b = '';
+  userTypes.forEach(i => {
+    if (i.code === req.body.own_code.substr(0, 4)) {
+      a = i.meaning;
+      if (req.body.own_code.length === 10) b = 'student';
+      else b = 'teacher';
+    }
+  });
   newUser = new User({
-    own_code: req.body.own_code,
+    avatar: req.body.avatar,
     f_name: req.body.f_name,
     l_name: req.body.l_name,
+    own_code: req.body.own_code,
+    register: req.body.register,
+    phone: req.body.phone,
     password: req.body.password,
-    type_code: req.body.own_code.substring(0, 4)
+    type: b,
+    type_meaning: a
   });
   newUser
     .save()
@@ -49,19 +52,19 @@ const update = (req, res) => {
   let id = req.body.id;
   User.findById(id)
     .then(user => {
-      user.own_code = req.body.own_code;
+      user.avatar = req.body.avatar;
       user.f_name = req.body.f_name;
       user.l_name = req.body.l_name;
+      user.register = req.body.register;
+      user.phone = req.body.phone;
       user.password = req.body.password;
-      user.type_code = req.body.type_code;
       user
         .save()
         .then(user => {
           res.json(message.SUCCESS(user));
         })
         .catch(err => {
-          return;
-          res.json(message.ERROR);
+          return res.json(message.ERROR);
         });
     })
     .catch(err => {
@@ -89,9 +92,6 @@ const deletee = (req, res) => {
 };
 
 module.exports = {
-  get,
-  // getId,
-  // updateUser,
   check,
   create,
   update,

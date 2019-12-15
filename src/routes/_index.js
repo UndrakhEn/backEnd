@@ -5,7 +5,7 @@ const postRouter = require('./postRouter');
 app.use('/post', postRouter);
 
 const commRouter = require('./commRouter');
-app.use('/comm', commRouter);
+app.use('/comment', commRouter);
 
 const userRouter = require('./userRouter');
 app.use('/user', userRouter);
