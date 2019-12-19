@@ -2,9 +2,9 @@ const router = require('express').Router();
 const postControllers = require('../controllers/postController');
 
 //get all the posts
-router.get('/get', postControllers.get);
-router.get('/getId', postControllers.getId);
-router.get('/getUserIdAll', postControllers.getUserIdAll);
+router.post('/get', postControllers.get);
+router.post('/getId', postControllers.getId);
+router.post('/getUserIdAll', postControllers.getUserIdAll);
 
 //create a posts
 router.post('/create', postControllers.create);

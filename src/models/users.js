@@ -11,4 +11,5 @@ const UsersSchema = mongoose.Schema({
   type: { type: String, require: true },
   type_meaning: { type: String, require: true }
 });
-const User = (module.exports = mongoose.model('users', UsersSchema));
+const User = mongoose.model('users', UsersSchema);
+module.exports = User

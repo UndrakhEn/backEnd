@@ -9,4 +9,5 @@ const CommentsSchema = mongoose.Schema({
   dislike_cnt: { type: Number, require: false },
   like_cnt: { type: Number, require: false }
 });
-const Comment = (module.exports = mongoose.model('comments', CommentsSchema));
+const Comment = mongoose.model('comments', CommentsSchema);
+module.exports = Comment

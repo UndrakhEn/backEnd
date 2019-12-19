@@ -1,6 +1,15 @@
 const User = require('../models/users');
 const message = require('../utils/message');
 const { userTypes } = require('../utils/userTypes');
+const get = (req, res) => {
+  User.find()
+    .then(users => {
+      return res.json(message.SUCCESS(users));
+    })
+    .catch(err => {
+      return res.json(message.ERROR);
+    });
+};
 const check = (req, res) => {
   let code = req.body.own_code;
   let pass = req.body.password;
@@ -92,6 +101,7 @@ const deletee = (req, res) => {
 };
 
 module.exports = {
+  get,
   check,
   create,
   update,

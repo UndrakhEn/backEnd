@@ -8,10 +8,13 @@ const PostSchema = mongoose.Schema({
   created_date: { type: Date, require: true },
   is_vissible: { type: Boolean, require: true },
   dislike_cnt: { type: Number, require: false },
-  like_cnt: { type: Number, require: false },
+  like_cnt: { type: Array, require: false },
   perfor_code: { type: String, require: true },
   is_thanks: { type: Boolean, require: true },
   deadline: { type: Date, require: true }
 });
 
-const Post = (module.exports = mongoose.model('posts', PostSchema));
+
+
+const Post = mongoose.model('posts', PostSchema);
+module.exports = Post

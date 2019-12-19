@@ -1,6 +1,17 @@
 const Comment = require('../models/comments');
 const message = require('../utils/message');
+const user = require('../models/users');
 
+Comment.aggregate([
+  {
+    $lookup: {
+      from: user,
+      localField: 'user_id',
+      foreignField: '_id',
+      as: 'commentsDetialUser'
+    }
+  }
+]);
 const get = (req, res) => {
   Comment.find()
     .then(comments => {
@@ -39,10 +50,13 @@ f1 = data => {
       let data2 = await f0(i);
       let obj = {
         _id: i._id,
+        post_id: i.post_id,
         body: i.body,
         created_date: i.created_date,
         parent_id: i.parent_id,
-        post_id: i.post_id,
+        user_id: i.user_id,
+        dislike_cnt: i.dislike_cnt,
+        like_cnt: i.like_cnt,
         replies: data2
       };
       xaxa.push(obj);
@@ -67,10 +81,13 @@ const reply = (req, res) => {
 const create = (req, res) => {
   console.log(req.body);
   newComm = new Comment({
+    post_id: req.body.post_id,
     body: req.body.body,
     created_date: Date.now(),
     parent_id: req.body.parent_id,
-    post_id: req.body.post_id
+    user_id: req.body.user_id,
+    dislike_cnt: req.body.dislike_cnt,
+    like_cnt: req.body.like_cnt
   });
   newComm
     .save()
@@ -87,10 +104,13 @@ const update = (req, res) => {
   let id = req.body.id;
   Comment.findById(id)
     .then(comment => {
+      comment.post_id = req.body.post_id;
       comment.body = req.body.body;
       comment.created_date = Date.now();
       comment.parent_id = req.body.parent_id;
-      comment.post_id = req.body.post_id;
+      comment.user_id = req.body.user_id;
+      comment.dislike_cnt = req.body.dislike_cnt;
+      comment.like_cnt = req.body.like_cnt;
       comment
         .save()
         .then(data => {

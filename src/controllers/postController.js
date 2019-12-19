@@ -1,13 +1,28 @@
+const db = require('../models/_index');
 const Post = require('../models/post');
 const message = require('../utils/message');
+const  MongoClient = require('mongodb').MongoClient;
+const url = "mongodb://127.0.0.1:27017/"; 
+let dbo;
+MongoClient.connect(url, function(err, db) {
+  if (err) console.log(err)
+  dbo = db.db("db");
+})
+
 const get = (req, res) => {
-  Post.find()
-    .then(posts => {
-      return res.json(message.SUCCESS(posts));
-    })
-    .catch(err => {
-      return res.json(message.ERROR);
-    });
+  console.log('test')
+  dbo.collection('posts').aggregate([{
+    $lookup:{
+      from: 'users',  
+      localField: 'user_id',
+      foreignField: '_id',
+      as: 'author'
+    }
+  }]).toArray((err,res)=>{
+      // 
+    if(err) return res.json(message.ERROR);
+    return res.json(message.SUCCESS(res));
+  })
 };
 
 const getId = (req, res) => {
@@ -40,12 +55,17 @@ const getUserIdAll = (req, res) => {
 const create = (req, res) => {
   console.log(req.body);
   newPost = new Post({
-    users_id: req.body.user_id,
-    created_date: Date.now(),
+    user_id: req.body.user_id,
+    tagged_user: req.body.tagged_user,
     body: req.body.body,
-    status: req.body.status,
+    images: req.body.images,
+    created_date: Date.now(),
+    is_vissible: req.body.is_vissible,
+    dislike_cnt: req.body.dislike_cnt,
+    like_cnt: req.body.like_cnt,
     perfor_code: req.body.perfor_code,
-    post_type: req.body.post_type
+    is_thanks: req.body.is_thanks,
+    deadline: req.body.deadline
   });
   newPost
     .save()
@@ -62,12 +82,17 @@ const update = (req, res) => {
   let id = req.body.id;
   Post.findById(id)
     .then(post => {
-      post.users_id = req.body.user_id;
-      post.created_date = Date.now();
+      post.user_id = req.body.user_id;
+      post.tagged_user = req.body.tagged_user;
       post.body = req.body.body;
-      post.status = req.body.status;
+      post.images = req.body.images;
+      post.created_date = Date.now();
+      post.is_vissible = req.body.is_vissible;
+      post.dislike_cnt = req.body.dislike_cnt;
+      post.like_cnt = req.body.like_cnt;
       post.perfor_code = req.body.perfor_code;
-      post.post_type = req.body.post_type;
+      post.is_thanks = req.body.is_thanks;
+      post.deadline = req.body.deadline;
       post
         .save()
         .then(post => {
