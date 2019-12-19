@@ -5,10 +5,11 @@ const cors = require('cors');
 const path = require('path');
 const app = express();
 const config = require('./src/utils/config');
+
 mongoose
   .connect(config.DB, { useNewUrlParser: true })
   .then(() => {
-    console.log('Database succesfully');
+    console.log('Database succesfully ');
   })
   .catch(err => {
     console.log('Unsuccesfully ', err);

@@ -1,30 +1,16 @@
 const db = require('../models/_index');
 const Post = require('../models/post');
 const message = require('../utils/message');
-const  MongoClient = require('mongodb').MongoClient;
-const url = "mongodb://127.0.0.1:27017/"; 
-let dbo;
-MongoClient.connect(url, function(err, db) {
-  if (err) console.log(err)
-  dbo = db.db("db");
-})
 
 const get = (req, res) => {
-  console.log('test')
-  dbo.collection('posts').aggregate([{
-    $lookup:{
-      from: 'users',  
-      localField: 'user_id',
-      foreignField: '_id',
-      as: 'author'
-    }
-  }]).toArray((err,res)=>{
-      // 
-    if(err) return res.json(message.ERROR);
-    return res.json(message.SUCCESS(res));
-  })
+  Post.find({})
+    .then(posts => {
+      return res.json(message.SUCCESS(posts));
+    })
+    .catch(err => {
+      return res.json(message.NOT_FOUND);
+    });
 };
-
 const getId = (req, res) => {
   let id = req.body.id;
   Post.findById(id)
