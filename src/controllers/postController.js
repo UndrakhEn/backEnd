@@ -1,14 +1,31 @@
 const db = require('../models/_index');
 const Post = require('../models/post');
+const User = require('../models/users');
 const message = require('../utils/message');
 
 const get = (req, res) => {
-  Post.find({})
-    .then(posts => {
-      return res.json(message.SUCCESS(posts));
+  Post.aggregate([
+    {
+      $project: {
+        userId: {
+          $toObjectId: '$user_id'
+        }
+      }
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'userId',
+        foreignField: '_id',
+        as: 'user'
+      }
+    }
+  ])
+    .then(p => {
+      console.log(p);
     })
-    .catch(err => {
-      return res.json(message.NOT_FOUND);
+    .catch(e => {
+      console.log(e.message);
     });
 };
 const getId = (req, res) => {
