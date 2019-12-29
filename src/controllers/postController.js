@@ -1,6 +1,5 @@
 const db = require('../models/_index');
 const Post = require('../models/post');
-const User = require('../models/users');
 const message = require('../utils/message');
 
 const get = (req, res) => {

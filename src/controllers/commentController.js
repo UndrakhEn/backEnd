@@ -1,19 +1,33 @@
 const Comment = require('../models/comments');
 const message = require('../utils/message');
-const user = require('../models/users');
 
-Comment.aggregate([
-  {
-    $lookup: {
-      from: user,
-      localField: 'user_id',
-      foreignField: '_id',
-      as: 'commentsDetialUser'
-    }
-  }
-]);
 const get = (req, res) => {
-  Comment.find()
+  Comment.aggregate([
+    {
+      $project: {
+        post_id: 1,
+        body: 1,
+        created_date: 1,
+        parent_id: 1,
+        require: 1,
+        user_id: 1,
+        dislike_cnt: 1,
+        like_cnt: 1,
+        userId: {
+          $toObjectId: '$user_id'
+        }
+      }
+    },
+    { $sort: { created_date: -1 } },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'usersId',
+        foreignField: '_id',
+        as: 'user'
+      }
+    }
+  ])
     .then(comments => {
       return res.json(message.SUCCESS(comments));
     })
@@ -24,7 +38,32 @@ const get = (req, res) => {
 
 const getPostId = (req, res) => {
   let postId = req.body.post_id;
-  Comment.find({ post_id: postId })
+  Comment.aggregate([
+    { $match: { post_id: postId } },
+    {
+      $project: {
+        post_id: 1,
+        body: 1,
+        created_date: 1,
+        parent_id: 1,
+        user_id: 1,
+        dislike_cnt: 1,
+        like_cnt: 1,
+        userId: {
+          $toObjectId: '$user_id'
+        }
+      }
+    },
+    { $sort: { created_date: -1 } },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'userId',
+        foreignField: '_id',
+        as: 'user'
+      }
+    }
+  ])
     .then(comm => {
       console.log(comm);
       if (comm.length > 0) return res.json(message.SUCCESS(comm));
