@@ -7,11 +7,23 @@ const get = (req, res) => {
   Post.aggregate([
     {
       $project: {
+        user_id: 1,
+        tagged_user: 1,
+        body: 1,
+        images: 1,
+        created_date: 1,
+        is_vissible: 1,
+        dislike_cnt: 1,
+        like_cnt: 1,
+        perfor_code: 1,
+        is_thanks: 1,
+        deadline: 1,
         userId: {
           $toObjectId: '$user_id'
         }
       }
     },
+    { $sort: { created_date: -1 } },
     {
       $lookup: {
         from: 'users',
@@ -21,17 +33,49 @@ const get = (req, res) => {
       }
     }
   ])
-    .then(p => {
-      console.log(p);
+    .then(posts => {
+      return res.json(message.SUCCESS(posts));
     })
     .catch(e => {
-      console.log(e.message);
+      return res.json(message.NOT_FOUND);
     });
 };
 const getId = (req, res) => {
-  let id = req.body.id;
-  Post.findById(id)
+  let id2 = req.body.id;
+  Post.aggregate([
+    {
+      $project: {
+        user_id: 1,
+        tagged_user: 1,
+        body: 1,
+        images: 1,
+        created_date: 1,
+        is_vissible: 1,
+        dislike_cnt: 1,
+        like_cnt: 1,
+        perfor_code: 1,
+        is_thanks: 1,
+        deadline: 1,
+        userId: {
+          $toObjectId: '$user_id'
+        },
+        idid: {
+          $toString: '$_id'
+        }
+      }
+    },
+    { $match: { idid: req.body.id } },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'userId',
+        foreignField: '_id',
+        as: 'user'
+      }
+    }
+  ])
     .then(post => {
+      console.log(post);
       return res.json(message.SUCCESS(post));
     })
     .catch(err => {
