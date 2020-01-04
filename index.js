@@ -2,14 +2,15 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const path = require('path');
 const app = express();
 const config = require('./src/utils/config');
+const server = require('./src/utils/server');
+const mssql = require('mssql');
 
 mongoose
   .connect(config.DB, { useNewUrlParser: true })
   .then(() => {
-    console.log('Database succesfully ');
+    console.log('MONGO Database succesfully ');
   })
   .catch(err => {
     console.log('Unsuccesfully ', err);
