@@ -1,6 +1,5 @@
 const User = require('../models/users');
 const message = require('../utils/message');
-const { userTypes } = require('../utils/userTypes');
 const mssql = require('mssql');
 const dbConfig = require('../utils/server');
 const get = (req, res) => {
