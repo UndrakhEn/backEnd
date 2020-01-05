@@ -2,32 +2,7 @@ const Comment = require('../models/comments');
 const message = require('../utils/message');
 
 const get = (req, res) => {
-  Comment.aggregate([
-    {
-      $project: {
-        post_id: 1,
-        body: 1,
-        created_date: 1,
-        parent_id: 1,
-        require: 1,
-        user_id: 1,
-        dislike_cnt: 1,
-        like_cnt: 1,
-        userId: {
-          $toObjectId: '$user_id'
-        }
-      }
-    },
-    { $sort: { created_date: -1 } },
-    {
-      $lookup: {
-        from: 'users',
-        localField: 'usersId',
-        foreignField: '_id',
-        as: 'user'
-      }
-    }
-  ])
+  Comment.find()
     .then(comments => {
       return res.json(message.SUCCESS(comments));
     })
@@ -38,32 +13,7 @@ const get = (req, res) => {
 
 const getPostId = (req, res) => {
   let postId = req.body.post_id;
-  Comment.aggregate([
-    { $match: { post_id: postId } },
-    {
-      $project: {
-        post_id: 1,
-        body: 1,
-        created_date: 1,
-        parent_id: 1,
-        user_id: 1,
-        dislike_cnt: 1,
-        like_cnt: 1,
-        userId: {
-          $toObjectId: '$user_id'
-        }
-      }
-    },
-    { $sort: { created_date: -1 } },
-    {
-      $lookup: {
-        from: 'users',
-        localField: 'userId',
-        foreignField: '_id',
-        as: 'user'
-      }
-    }
-  ])
+  Comment.find({ post_id: postId })
     .then(comm => {
       console.log(comm);
       if (comm.length > 0) return res.json(message.SUCCESS(comm));
@@ -74,6 +24,7 @@ const getPostId = (req, res) => {
       return res.json(message.ERROR);
     });
 };
+
 f0 = i => {
   return new Promise(resolve => {
     Comment.find({ parent_id: i._id }).then(data => {
@@ -93,7 +44,7 @@ f1 = data => {
         body: i.body,
         created_date: i.created_date,
         parent_id: i.parent_id,
-        user_id: i.user_id,
+        user: i.user,
         dislike_cnt: i.dislike_cnt,
         like_cnt: i.like_cnt,
         replies: data2
@@ -124,7 +75,7 @@ const create = (req, res) => {
     body: req.body.body,
     created_date: Date.now(),
     parent_id: req.body.parent_id,
-    user_id: req.body.user_id,
+    user: req.body.user,
     dislike_cnt: req.body.dislike_cnt,
     like_cnt: req.body.like_cnt
   });
@@ -147,7 +98,7 @@ const update = (req, res) => {
       comment.body = req.body.body;
       comment.created_date = Date.now();
       comment.parent_id = req.body.parent_id;
-      comment.user_id = req.body.user_id;
+      comment.user = req.body.user;
       comment.dislike_cnt = req.body.dislike_cnt;
       comment.like_cnt = req.body.like_cnt;
       comment

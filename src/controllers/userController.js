@@ -1,4 +1,3 @@
-const User = require('../models/users');
 const message = require('../utils/message');
 const mssql = require('mssql');
 const dbConfig = require('../utils/server');

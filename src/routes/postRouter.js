@@ -3,6 +3,7 @@ const postControllers = require('../controllers/postController');
 
 //get all the posts
 router.post('/get', postControllers.get);
+router.post('/tagged/get', postControllers.getTagged);
 router.post('/getId', postControllers.getId);
 router.post('/getUserIdAll', postControllers.getUserIdAll);
 
