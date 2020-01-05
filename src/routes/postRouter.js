@@ -11,6 +11,7 @@ router.post('/getUserIdAll', postControllers.getUserIdAll);
 router.post('/create', postControllers.create);
 // to update a post
 router.post('/update', postControllers.update);
+router.post('/update/perforCode', postControllers.updatePerforCode);
 //make delete
 router.post('/delete', postControllers.deletee);
 

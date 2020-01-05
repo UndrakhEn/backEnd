@@ -47,7 +47,7 @@ const getId = (req, res) => {
 };
 
 const getUserIdAll = (req, res) => {
-  let user_id = req.body.users_id;
+  let user_id = req.body.user_id;
   Post.find({ 'user.id': user_id })
     .sort({ created_date: -1 })
     .then(data => {
@@ -121,6 +121,26 @@ const update = (req, res) => {
     });
 };
 
+const updatePerforCode = (req, res) => {
+  let id = req.body.id;
+  let p = req.body.perfor_code;
+  Post.findById(id)
+    .then(post => {
+      post.perfor_code = p;
+      post
+        .save()
+        .then(post => {
+          res.json(message.SUCCESS(post));
+        })
+        .catch(err => {
+          return res.json(message.ERROR);
+        });
+    })
+    .catch(err => {
+      return res.json(message.NOT_FOUND);
+    });
+};
+
 const deletee = (req, res) => {
   let id = req.body.id;
   Post.findById(id)
@@ -148,5 +168,6 @@ module.exports = {
   getUserIdAll,
   create,
   update,
+  updatePerforCode,
   deletee
 };
