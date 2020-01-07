@@ -6,8 +6,8 @@ const CommentsSchema = mongoose.Schema({
   created_date: { type: Date, require: true },
   parent_id: { type: String, require: false },
   user: { type: Object, require: true },
-  dislike_cnt: { type: Number, require: false },
-  like_cnt: { type: Number, require: false }
+  dislike_cnt: { type: Array, require: false },
+  like_cnt: { type: Array, require: false }
 });
 const Comment = mongoose.model('comments', CommentsSchema);
 module.exports = Comment;

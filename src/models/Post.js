@@ -8,7 +8,7 @@ const PostSchema = mongoose.Schema({
   created_date: { type: Date, require: true },
   is_public: { type: Boolean, require: true },
   is_vissible: { type: Boolean, require: true },
-  dislike_cnt: { type: Number, require: false },
+  dislike_cnt: { type: Array, require: false },
   like_cnt: { type: Array, require: false },
   perfor_code: { type: String, require: true },
   is_thanks: { type: Boolean, require: true },
