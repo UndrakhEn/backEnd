@@ -18,6 +18,36 @@ const get = (req, res) => {
     });
 };
 
+const getStudent = (req, res) => {
+  let public = [];
+  Post.find({ 'user.type': 'student' })
+    .sort({ created_date: -1 })
+    .then(posts => {
+      if (posts.length == 0) return res.json(message.NOT_FOUND);
+      for (let index = 0; index < posts.length; index++) {
+        if (posts[index].is_public == true) public.push(posts[index]);
+      }
+      return res.json(message.SUCCESS(public));
+    })
+    .catch(e => {
+      console.log(e);
+      return res.json(message.ERROR);
+    });
+};
+
+const getThanks = (req, res) => {
+  let public = [];
+  Post.find({ is_thanks: true })
+    .sort({ created_date: -1 })
+    .then(posts => {
+      if (posts.length == 0) return res.json(message.NOT_FOUND);
+      return res.json(message.SUCCESS(posts));
+    })
+    .catch(e => {
+      console.log(e);
+      return res.json(message.ERROR);
+    });
+};
 const getTagged = (req, res) => {
   Post.find({ 'tagged_user.id': req.body.user_id })
     .sort({ created_date: -1 })
@@ -165,7 +195,9 @@ module.exports = {
   get,
   getTagged,
   getId,
+  getThanks,
   getUserIdAll,
+  getStudent,
   create,
   update,
   updatePerforCode,

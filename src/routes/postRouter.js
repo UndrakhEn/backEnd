@@ -6,6 +6,8 @@ router.post('/get', postControllers.get);
 router.post('/tagged/get', postControllers.getTagged);
 router.post('/getId', postControllers.getId);
 router.post('/getUserIdAll', postControllers.getUserIdAll);
+router.post('/getStudent', postControllers.getStudent);
+router.post('/getThanks', postControllers.getThanks);
 
 //create a posts
 router.post('/create', postControllers.create);
