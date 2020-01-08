@@ -11,6 +11,78 @@ const get = (req, res) => {
     });
 };
 
+const updateLike = (req, res) => {
+  let id = req.body.id;
+  let a = 0;
+  Comment.findById(id)
+    .then(comm => {
+      for (let index = 0; index < comm.like_cnt.length; index++) {
+        if (comm.like_cnt[index] == req.body.userId) {
+          comm.like_cnt.splice(index, 1);
+          a = 1;
+        }
+      }
+      for (let index = 0; index < comm.dislike_cnt.length; index++) {
+        if (comm.dislike_cnt[index] == req.body.userId) {
+          comm.dislike_cnt.splice(index, 1);
+          comm.like_cnt.push(req.body.userId);
+          a = 1;
+        }
+      }
+      // post.dislike_cnt = req.body.id;
+      if (a == 0) {
+        comm.like_cnt.push(req.body.userId);
+      } else {
+      }
+      comm
+        .save()
+        .then(comm => {
+          res.json(message.SUCCESS(comm));
+        })
+        .catch(err => {
+          return res.json(message.ERROR);
+        });
+    })
+    .catch(err => {
+      return res.json(message.NOT_FOUND);
+    });
+};
+const updateDisLike = (req, res) => {
+  let id = req.body.id;
+  let a = 0;
+  Comment.findById(id)
+    .then(comm => {
+      for (let index = 0; index < comm.dislike_cnt.length; index++) {
+        if (comm.dislike_cnt[index] == req.body.userId) {
+          comm.dislike_cnt.splice(index, 1);
+          a = 1;
+        }
+      }
+      for (let index = 0; index < comm.like_cnt.length; index++) {
+        if (comm.like_cnt[index] == req.body.userId) {
+          comm.like_cnt.splice(index, 1);
+          comm.dislike_cnt.push(req.body.userId);
+          a = 1;
+        }
+      }
+      // comm.dislike_cnt = req.body.id;
+      if (a == 0) {
+        comm.dislike_cnt.push(req.body.userId);
+      }
+      comm
+        .save()
+        .then(comm => {
+          res.json(message.SUCCESS(comm));
+        })
+        .catch(err => {
+          return res.json(message.ERROR);
+        });
+    })
+    .catch(err => {
+      return res.json(message.NOT_FOUND);
+    });
+};
+
 const getPostId = (req, res) => {
   let postId = req.body.post_id;
   Comment.find({ post_id: postId })
@@ -140,6 +212,8 @@ const deletee = (req, res) => {
 module.exports = {
   get,
   create,
+  updateDisLike,
+  updateLike,
   getPostId,
   reply,
   update,

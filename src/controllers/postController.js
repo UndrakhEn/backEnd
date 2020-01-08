@@ -157,11 +157,22 @@ const updateLike = (req, res) => {
   Post.findById(id)
     .then(post => {
       for (let index = 0; index < post.like_cnt.length; index++) {
-        if (post.like_cnt[index] == req.body.userId) a = 1;
+        if (post.like_cnt[index] == req.body.userId) {
+          post.like_cnt.splice(index, 1);
+          a = 1;
+        }
+      }
+      for (let index = 0; index < post.dislike_cnt.length; index++) {
+        if (post.dislike_cnt[index] == req.body.userId) {
+          post.dislike_cnt.splice(index, 1);
+          post.like_cnt.push(req.body.userId);
+          a = 1;
+        }
       }
       // post.dislike_cnt = req.body.id;
       if (a == 0) {
         post.like_cnt.push(req.body.userId);
+      } else {
       }
       post
         .save()
@@ -182,7 +193,17 @@ const updateDisLike = (req, res) => {
   Post.findById(id)
     .then(post => {
       for (let index = 0; index < post.dislike_cnt.length; index++) {
-        if (post.dislike_cnt[index] == req.body.userId) a = 1;
+        if (post.dislike_cnt[index] == req.body.userId) {
+          post.dislike_cnt.splice(index, 1);
+          a = 1;
+        }
+      }
+      for (let index = 0; index < post.like_cnt.length; index++) {
+        if (post.like_cnt[index] == req.body.userId) {
+          post.like_cnt.splice(index, 1);
+          post.dislike_cnt.push(req.body.userId);
+          a = 1;
+        }
       }
       // post.dislike_cnt = req.body.id;
       if (a == 0) {
