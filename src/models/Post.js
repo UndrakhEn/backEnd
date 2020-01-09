@@ -12,7 +12,8 @@ const PostSchema = mongoose.Schema({
   like_cnt: { type: Array, require: false },
   perfor_code: { type: String, require: true },
   is_thanks: { type: Boolean, require: true },
-  deadline: { type: Date, require: true }
+  deadline: { type: Date, require: true },
+  comment_cnt: { type: Number }
 });
 
 const Post = mongoose.model('posts', PostSchema);

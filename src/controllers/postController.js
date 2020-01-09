@@ -1,16 +1,19 @@
 const db = require('../models/_index');
 const Post = require('../models/post');
+const Comment = require('../models/comments');
 const message = require('../utils/message');
 
-const get = (req, res) => {
+const get = async (req, res) => {
   let public = [];
   Post.find()
     .sort({ created_date: -1 })
-    .then(posts => {
+    .then(async posts => {
       if (posts.length == 0) return res.json(message.NOT_FOUND);
       for (let index = 0; index < posts.length; index++) {
         if (posts[index].is_public == true) public.push(posts[index]);
       }
+      await firstAsync(public);
+
       return res.json(message.SUCCESS(public));
     })
     .catch(e => {
@@ -20,13 +23,14 @@ const get = (req, res) => {
 
 const getStudent = (req, res) => {
   let public = [];
-  Post.find({ 'user.type': 'student' })
+  Post.find({ 'user.type': 'D' })
     .sort({ created_date: -1 })
-    .then(posts => {
+    .then(async posts => {
       if (posts.length == 0) return res.json(message.NOT_FOUND);
       for (let index = 0; index < posts.length; index++) {
         if (posts[index].is_public == true) public.push(posts[index]);
       }
+      await firstAsync(public);
       return res.json(message.SUCCESS(public));
     })
     .catch(e => {
@@ -260,6 +264,22 @@ const deletee = (req, res) => {
       console.log(err);
       return res.json(message.NOT_FOUND);
     });
+};
+
+const firstAsync = async public => {
+  return new Promise(async (resolve, reject) => {
+    for (let index = 0; index < public.length; index++) {
+      const i = public[index];
+      await Comment.find({ post_id: i.id })
+        .then(comm => {
+          public[index].comment_cnt = comm.length;
+        })
+        .catch(e => {
+          public[index].comment_cnt = 0;
+        });
+    }
+    resolve(true);
+  });
 };
 
 module.exports = {
