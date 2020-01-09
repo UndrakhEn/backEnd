@@ -11,6 +11,8 @@ router.post('/getThanks', postControllers.getThanks);
 router.post('/updateLike', postControllers.updateLike);
 router.post('/updateDisLike', postControllers.updateDisLike);
 
+router.post('/c', postControllers.c);
+router.post('/b1', postControllers.b1);
 //create a posts
 router.post('/create', postControllers.create);
 // to update a post

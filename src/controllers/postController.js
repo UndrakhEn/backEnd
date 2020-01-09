@@ -20,7 +20,6 @@ const get = async (req, res) => {
       return res.json(message.ERROR);
     });
 };
-
 const getStudent = (req, res) => {
   let public = [];
   Post.find({ 'user.type': 'D' })
@@ -38,7 +37,6 @@ const getStudent = (req, res) => {
       return res.json(message.ERROR);
     });
 };
-
 const getThanks = (req, res) => {
   let public = [];
   Post.find({ is_thanks: true })
@@ -52,6 +50,83 @@ const getThanks = (req, res) => {
       return res.json(message.ERROR);
     });
 };
+
+const c = (req, res) => {
+  let sent = 0,
+    seen = 0,
+    pending = 0,
+    done = 0,
+    reject = 0,
+    thanks = 0;
+  let all = {};
+  Post.find({ 'tagged_user.id': req.body.user_id })
+    .then(data => {
+      // console.log(data);
+      for (let index = 0; index < data.length; index++) {
+        if (data[index].is_thanks == true) thanks = thanks + 1;
+        if (data[index].perfor_code == 'sent') sent = sent + 1;
+        else if (data[index].perfor_code == 'seen') seen = seen + 1;
+        else if (data[index].perfor_code == 'pending') pending = pending + 1;
+        else if (data[index].perfor_code == 'done') done = done + 1;
+        else reject = reject + 1; //reject
+      }
+      all.sent = sent;
+      all.seen = seen;
+      all.pending = pending;
+      all.done = done;
+      all.reject = reject;
+      all.thanks = thanks;
+
+      return res.json(message.SUCCESS(all));
+    })
+    .catch(err => {
+      console.log(err);
+    });
+};
+
+const b1 = (req, res) => {
+  let id = req.body.own_code;
+  let str = JSON.stringify(req.body.own_code).substr(1, 4);
+  let sent = 0,
+    seen = 0,
+    pending = 0,
+    done = 0,
+    reject = 0,
+    thanks = 0;
+  let all = {};
+  Post.find()
+    .then(data => {
+      for (let index = 0; index < data.length; index++) {
+        let o = 0;
+        for (let j = 0; j < data[index].tagged_user.length; j++) {
+          str2 = data[index].tagged_user[j].own_code;
+          str3 = JSON.stringify(str2);
+          console.log('---------------------', str2.substr(0, 4));
+          if (str2.substr(0, 4) == str) o = 1;
+        }
+        if (o == 1) {
+          if (data[index].is_thanks == true) thanks = thanks + 1;
+          if (data[index].perfor_code == 'sent') sent = sent + 1;
+          else if (data[index].perfor_code == 'seen') seen = seen + 1;
+          else if (data[index].perfor_code == 'pending') pending = pending + 1;
+          else if (data[index].perfor_code == 'done') done = done + 1;
+          else reject = reject + 1; //reject
+        }
+      }
+      all.sent = sent;
+      all.seen = seen;
+      all.pending = pending;
+      all.done = done;
+      all.reject = reject;
+      all.thanks = thanks;
+
+      return res.json(message.SUCCESS(all));
+    })
+    .catch(err => {
+      console.log(err);
+    });
+};
+
 const getTagged = (req, res) => {
   Post.find({ 'tagged_user.id': req.body.user_id })
     .sort({ created_date: -1 })
@@ -294,5 +369,7 @@ module.exports = {
   update,
   updatePerforCode,
   deletee,
-  updateDisLike
+  updateDisLike,
+  c,
+  b1
 };
