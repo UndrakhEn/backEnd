@@ -83,11 +83,22 @@ const updateDisLike = (req, res) => {
     });
 };
 
-const getPostId = (req, res) => {
+const getPostId = async (req, res) => {
   let postId = req.body.post_id;
-  Comment.find({ post_id: postId })
-    .then(comm => {
-      console.log(comm);
+  await Comment.find({ post_id: postId, parent_id: '' })
+    .then(async comm => {
+      for (let index = 0; index < comm.length; index++) {
+        const element = comm[index];
+        await Comment.find({ post_id: postId, parent_id: element._id })
+          .then(rep => {
+            console.log(rep);
+            comm[index].replies = rep;
+          })
+          .catch(e => {
+            comm[index].replies = [];
+          });
+      }
+
       if (comm.length > 0) return res.json(message.SUCCESS(comm));
       else return res.json(message.NOT_FOUND);
     })

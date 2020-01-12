@@ -29,8 +29,19 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(
+  bodyParser.json({
+    limit: '10mb'
+  })
+);
+
+app.use(
+  bodyParser.urlencoded({
+    limit: '10mb',
+    parameterLimit: 50,
+    extended: true
+  })
+);
 
 const router = require('./src/routes/_index');
 app.use('/api/', router);

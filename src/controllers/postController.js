@@ -59,12 +59,12 @@ const c = (req, res) => {
     reject = 0,
     thanks = 0;
   let all = {};
-  Post.find({ 'tagged_user.id': req.body.user_id })
+  Post.find({ 'tagged_user.own_code': req.body.own_code })
     .then(data => {
       // console.log(data);
       for (let index = 0; index < data.length; index++) {
         if (data[index].is_thanks == true) thanks = thanks + 1;
-        if (data[index].perfor_code == 'sent') sent = sent + 1;
+        else if (data[index].perfor_code == 'sent') sent = sent + 1;
         else if (data[index].perfor_code == 'seen') seen = seen + 1;
         else if (data[index].perfor_code == 'pending') pending = pending + 1;
         else if (data[index].perfor_code == 'done') done = done + 1;
@@ -77,6 +77,7 @@ const c = (req, res) => {
       all.reject = reject;
       all.thanks = thanks;
 
+      console.log(all);
       return res.json(message.SUCCESS(all));
     })
     .catch(err => {
@@ -84,47 +85,347 @@ const c = (req, res) => {
     });
 };
 
-const b1 = (req, res) => {
+const b1 = async (req, res) => {
   let id = req.body.own_code;
-  let str = JSON.stringify(req.body.own_code).substr(1, 4);
-  let sent = 0,
-    seen = 0,
-    pending = 0,
-    done = 0,
-    reject = 0,
-    thanks = 0;
-  let all = {};
-  Post.find()
-    .then(data => {
+  let str = JSON.stringify(id).substr(1, 4);
+  let mbus = ['M.IT', 'M.MA', 'M.BI', 'M.CH', 'M.GE', 'M.PH', 'M.MS'];
+  let boss = ['E.EM', 'E.ER', 'E.LL', 'E.PS', 'E.SW'];
+  let nhus = ['H.FL', 'H.HI', 'H.ML', 'H.RL', 'H.SC'];
+  let sumAll = {};
+  too = 0;
+  for (let q1 = 0; q1 < mbus.length; q1++) {
+    if (str == mbus[q1]) {
+      for (let q = 0; q < mbus.length; q++) {
+        let sent = 0,
+          seen = 0,
+          pending = 0,
+          done = 0,
+          reject = 0,
+          thanks = 0;
+        let all = {};
+        await Post.find()
+          .then(data => {
+            for (let index = 0; index < data.length; index++) {
+              let o = 0;
+              for (let j = 0; j < data[index].tagged_user.length; j++) {
+                str2 = data[index].tagged_user[j].own_code;
+                str3 = JSON.stringify(str2);
+                if (str2.substr(0, 4) == mbus[q] && str2.length != 10) {
+                  o = 1;
+                  console.log(str2);
+                }
+              }
+              if (o == 1) {
+                if (data[index].is_thanks == true) thanks = thanks + 1;
+                else if (data[index].perfor_code == 'sent') sent = sent + 1;
+                else if (data[index].perfor_code == 'seen') seen = seen + 1;
+                else if (data[index].perfor_code == 'pending')
+                  pending = pending + 1;
+                else if (data[index].perfor_code == 'done') done = done + 1;
+                else reject = reject + 1; //reject
+              }
+            }
+            all.sent = sent;
+            all.seen = seen;
+            all.pending = pending;
+            all.done = done;
+            all.reject = reject;
+            all.thanks = thanks;
+          })
+          .catch(err => {
+            console.log(err);
+          });
+        sumAll[mbus[q]] = all;
+      }
+      return res.json(message.SUCCESS(sumAll));
+    }
+  }
+  for (let q1 = 0; q1 < boss.length; q1++) {
+    if (str == boss[q1]) {
+      for (let q = 0; q < boss.length; q++) {
+        let sent = 0,
+          seen = 0,
+          pending = 0,
+          done = 0,
+          reject = 0,
+          thanks = 0;
+        let all = {};
+        await Post.find()
+          .then(data => {
+            for (let index = 0; index < data.length; index++) {
+              let o = 0;
+              for (let j = 0; j < data[index].tagged_user.length; j++) {
+                str2 = data[index].tagged_user[j].own_code;
+                str3 = JSON.stringify(str2);
+                if (str2.substr(0, 4) == boss[q] && str2.length != 10) o = 1;
+              }
+              if (o == 1) {
+                if (data[index].is_thanks == true) thanks = thanks + 1;
+                else if (data[index].perfor_code == 'sent') sent = sent + 1;
+                else if (data[index].perfor_code == 'seen') seen = seen + 1;
+                else if (data[index].perfor_code == 'pending')
+                  pending = pending + 1;
+                else if (data[index].perfor_code == 'done') done = done + 1;
+                else reject = reject + 1; //reject
+              }
+            }
+            all.sent = sent;
+            all.seen = seen;
+            all.pending = pending;
+            all.done = done;
+            all.reject = reject;
+            all.thanks = thanks;
+          })
+          .catch(err => {
+            console.log(err);
+          });
+        sumAll[boss[q]] = all;
+      }
+      console.log(sumAll);
+    }
+  }
+  for (let q1 = 0; q1 < nhus.length; q1++) {
+    if (str == nhus[q1]) {
+      for (let q = 0; q < nhus.length; q++) {
+        let sent = 0,
+          seen = 0,
+          pending = 0,
+          done = 0,
+          reject = 0,
+          thanks = 0;
+        let all = {};
+        await Post.find()
+          .then(data => {
+            for (let index = 0; index < data.length; index++) {
+              let o = 0;
+              for (let j = 0; j < data[index].tagged_user.length; j++) {
+                str2 = data[index].tagged_user[j].own_code;
+                str3 = JSON.stringify(str2);
+                if (str2.substr(0, 4) == nhus[q] && str2.length != 10) o = 1;
+              }
+              if (o == 1) {
+                if (data[index].is_thanks == true) thanks = thanks + 1;
+                else if (data[index].perfor_code == 'sent') sent = sent + 1;
+                else if (data[index].perfor_code == 'seen') seen = seen + 1;
+                else if (data[index].perfor_code == 'pending')
+                  pending = pending + 1;
+                else if (data[index].perfor_code == 'done') done = done + 1;
+                else reject = reject + 1; //reject
+              }
+            }
+            all.sent = sent;
+            all.seen = seen;
+            all.pending = pending;
+            all.done = done;
+            all.reject = reject;
+            all.thanks = thanks;
+          })
+          .catch(err => {
+            console.log(err);
+          });
+        sumAll[nhus[q]] = all;
+      }
+      console.log(sumAll);
+      return res.json(message.SUCCESS(sumAll));
+    }
+  }
+  return res.json(message.SUCCESS(sumAll));
+};
+
+const b2 = async (req, res) => {
+  let id = req.body.own_code;
+  let str = JSON.stringify(id).substr(1, 4);
+  let code = [];
+  let sumAll = {};
+  remove_duplicates_es6 = arr => {
+    let s = new Set(arr);
+    let it = s.values();
+    return Array.from(it);
+  };
+  await Post.find()
+    .then(async data => {
       for (let index = 0; index < data.length; index++) {
         let o = 0;
         for (let j = 0; j < data[index].tagged_user.length; j++) {
-          str2 = data[index].tagged_user[j].own_code;
-          str3 = JSON.stringify(str2);
-          console.log('---------------------', str2.substr(0, 4));
-          if (str2.substr(0, 4) == str) o = 1;
-        }
-        if (o == 1) {
-          if (data[index].is_thanks == true) thanks = thanks + 1;
-          if (data[index].perfor_code == 'sent') sent = sent + 1;
-          else if (data[index].perfor_code == 'seen') seen = seen + 1;
-          else if (data[index].perfor_code == 'pending') pending = pending + 1;
-          else if (data[index].perfor_code == 'done') done = done + 1;
-          else reject = reject + 1; //reject
+          if (data[index].tagged_user[j].own_code.length != 10) {
+            str2 = data[index].tagged_user[j].own_code;
+            str3 = JSON.stringify(str2);
+            if (str2.substr(0, 4) == str && str2.length != 10) {
+              code.push(str2);
+            }
+          }
         }
       }
-      all.sent = sent;
-      all.seen = seen;
-      all.pending = pending;
-      all.done = done;
-      all.reject = reject;
-      all.thanks = thanks;
-
-      return res.json(message.SUCCESS(all));
+      code = remove_duplicates_es6(code);
+      for (let index = 0; index < code.length; index++) {
+        // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        await Post.find({ 'tagged_user.own_code': code[index] })
+          .then(data => {
+            let sent = 0,
+              seen = 0,
+              pending = 0,
+              done = 0,
+              reject = 0,
+              thanks = 0;
+            let all = {};
+            for (let index = 0; index < data.length; index++) {
+              if (data[index].is_thanks == true) thanks = thanks + 1;
+              else if (data[index].perfor_code == 'sent') sent = sent + 1;
+              else if (data[index].perfor_code == 'seen') seen = seen + 1;
+              else if (data[index].perfor_code == 'pending')
+                pending = pending + 1;
+              else if (data[index].perfor_code == 'done') done = done + 1;
+              else reject = reject + 1; //reject
+            }
+            all.sent = sent;
+            all.seen = seen;
+            all.pending = pending;
+            all.done = done;
+            all.reject = reject;
+            all.thanks = thanks;
+            sumAll[code[index]] = all;
+            console.log(code[index]);
+            console.log(sumAll);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+      return res.json(message.SUCCESS(sumAll));
     })
     .catch(err => {
       console.log(err);
     });
+};
+
+const a = async (req, res) => {
+  let mbus = ['M.IT', 'M.MA', 'M.BI', 'M.CH', 'M.GE', 'M.PH', 'M.MS'];
+  let boss = ['E.EM', 'E.ER', 'E.LL', 'E.PS', 'E.SW'];
+  let nhus = ['H.FL', 'H.HI', 'H.ML', 'H.RL', 'H.SC'];
+  let sumAll = {};
+  let allAll = {};
+  too = 0;
+  for (let q = 0; q < mbus.length; q++) {
+    let sent = 0,
+      seen = 0,
+      pending = 0,
+      done = 0,
+      reject = 0,
+      thanks = 0;
+    let all = {};
+    await Post.find()
+      .then(data => {
+        for (let index = 0; index < data.length; index++) {
+          let o = 0;
+          for (let j = 0; j < data[index].tagged_user.length; j++) {
+            str2 = data[index].tagged_user[j].own_code;
+            str3 = JSON.stringify(str2);
+            if (str2.substr(0, 4) == mbus[q] && str2.length != 10) o = 1;
+          }
+          if (o == 1) {
+            if (data[index].is_thanks == true) thanks = thanks + 1;
+            else if (data[index].perfor_code == 'sent') sent = sent + 1;
+            else if (data[index].perfor_code == 'seen') seen = seen + 1;
+            else if (data[index].perfor_code == 'pending')
+              pending = pending + 1;
+            else if (data[index].perfor_code == 'done') done = done + 1;
+            else reject = reject + 1; //reject
+          }
+        }
+        all.sent = sent;
+        all.seen = seen;
+        all.pending = pending;
+        all.done = done;
+        all.reject = reject;
+        all.thanks = thanks;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    sumAll[mbus[q]] = all;
+  }
+  allAll['МБУС'] = sumAll;
+  for (let q = 0; q < boss.length; q++) {
+    let sent = 0,
+      seen = 0,
+      pending = 0,
+      done = 0,
+      reject = 0,
+      thanks = 0;
+    let all = {};
+    await Post.find()
+      .then(data => {
+        for (let index = 0; index < data.length; index++) {
+          let o = 0;
+          for (let j = 0; j < data[index].tagged_user.length; j++) {
+            str2 = data[index].tagged_user[j].own_code;
+            str3 = JSON.stringify(str2);
+            if (str2.substr(0, 4) == boss[q] && str2.length != 10) o = 1;
+          }
+          if (o == 1) {
+            if (data[index].is_thanks == true) thanks = thanks + 1;
+            else if (data[index].perfor_code == 'sent') sent = sent + 1;
+            else if (data[index].perfor_code == 'seen') seen = seen + 1;
+            else if (data[index].perfor_code == 'pending')
+              pending = pending + 1;
+            else if (data[index].perfor_code == 'done') done = done + 1;
+            else reject = reject + 1; //reject
+          }
+        }
+        all.sent = sent;
+        all.seen = seen;
+        all.pending = pending;
+        all.done = done;
+        all.reject = reject;
+        all.thanks = thanks;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    sumAll[boss[q]] = all;
+  }
+  allAll['БоСС'] = sumAll;
+  for (let q = 0; q < nhus.length; q++) {
+    let sent = 0,
+      seen = 0,
+      pending = 0,
+      done = 0,
+      reject = 0,
+      thanks = 0;
+    let all = {};
+    await Post.find()
+      .then(data => {
+        for (let index = 0; index < data.length; index++) {
+          let o = 0;
+          for (let j = 0; j < data[index].tagged_user.length; j++) {
+            str2 = data[index].tagged_user[j].own_code;
+            str3 = JSON.stringify(str2);
+            if (str2.substr(0, 4) == nhus[q] && str2.length != 10) o = 1;
+          }
+          if (o == 1) {
+            if (data[index].is_thanks == true) thanks = thanks + 1;
+            else if (data[index].perfor_code == 'sent') sent = sent + 1;
+            else if (data[index].perfor_code == 'seen') seen = seen + 1;
+            else if (data[index].perfor_code == 'pending')
+              pending = pending + 1;
+            else if (data[index].perfor_code == 'done') done = done + 1;
+            else reject = reject + 1; //reject
+          }
+        }
+        all.sent = sent;
+        all.seen = seen;
+        all.pending = pending;
+        all.done = done;
+        all.reject = reject;
+        all.thanks = thanks;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    sumAll[nhus[q]] = all;
+  }
+  allAll['НХУС'] = sumAll;
+  return res.json(message.SUCCESS(allAll));
 };
 
 const getTagged = (req, res) => {
@@ -174,21 +475,37 @@ const getUserIdAll = (req, res) => {
 };
 
 const create = (req, res) => {
-  console.log(req.body);
-  newPost = new Post({
-    user: req.body.user,
-    tagged_user: req.body.tagged_user,
-    body: req.body.body,
-    images: req.body.images,
-    created_date: Date.now(),
-    is_public: req.body.is_public,
-    is_vissible: req.body.is_vissible,
-    dislike_cnt: req.body.dislike_cnt,
-    like_cnt: req.body.like_cnt,
-    perfor_code: req.body.perfor_code,
-    is_thanks: req.body.is_thanks,
-    deadline: req.body.deadline
-  });
+  if (req.body.is_thanks === true) {
+    newPost = new Post({
+      user: req.body.user,
+      tagged_user: req.body.tagged_user,
+      body: req.body.body,
+      images: req.body.images,
+      created_date: Date.now(),
+      is_public: req.body.is_public,
+      is_vissible: req.body.is_vissible,
+      dislike_cnt: req.body.dislike_cnt,
+      like_cnt: req.body.like_cnt,
+      perfor_code: 'done',
+      is_thanks: req.body.is_thanks,
+      deadline: req.body.deadline
+    });
+  } else {
+    newPost = new Post({
+      user: req.body.user,
+      tagged_user: req.body.tagged_user,
+      body: req.body.body,
+      images: req.body.images,
+      created_date: Date.now(),
+      is_public: req.body.is_public,
+      is_vissible: req.body.is_vissible,
+      dislike_cnt: req.body.dislike_cnt,
+      like_cnt: req.body.like_cnt,
+      perfor_code: req.body.perfor_code,
+      is_thanks: req.body.is_thanks,
+      deadline: req.body.deadline
+    });
+  }
   newPost
     .save()
     .then(post => {
@@ -371,5 +688,7 @@ module.exports = {
   deletee,
   updateDisLike,
   c,
-  b1
+  b1,
+  b2,
+  a
 };

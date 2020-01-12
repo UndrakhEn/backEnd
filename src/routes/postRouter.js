@@ -13,6 +13,8 @@ router.post('/updateDisLike', postControllers.updateDisLike);
 
 router.post('/c', postControllers.c);
 router.post('/b1', postControllers.b1);
+router.post('/b2', postControllers.b2);
+router.post('/a', postControllers.a);
 //create a posts
 router.post('/create', postControllers.create);
 // to update a post
