@@ -305,14 +305,14 @@ const a = async (req, res) => {
   let sumAll = {};
   let allAll = {};
   too = 0;
+  let sent = 0,
+    seen = 0,
+    pending = 0,
+    done = 0,
+    reject = 0,
+    thanks = 0;
+  let all = {};
   for (let q = 0; q < mbus.length; q++) {
-    let sent = 0,
-      seen = 0,
-      pending = 0,
-      done = 0,
-      reject = 0,
-      thanks = 0;
-    let all = {};
     await Post.find()
       .then(data => {
         for (let index = 0; index < data.length; index++) {
@@ -342,17 +342,17 @@ const a = async (req, res) => {
       .catch(err => {
         console.log(err);
       });
-    sumAll[mbus[q]] = all;
+    // sumAll[mbus[q]] = all;
   }
-  allAll['МБУС'] = sumAll;
+  allAll['МБУС'] = all;
+  (sent = 0),
+    (seen = 0),
+    (pending = 0),
+    (done = 0),
+    (reject = 0),
+    (thanks = 0),
+    (all = {});
   for (let q = 0; q < boss.length; q++) {
-    let sent = 0,
-      seen = 0,
-      pending = 0,
-      done = 0,
-      reject = 0,
-      thanks = 0;
-    let all = {};
     await Post.find()
       .then(data => {
         for (let index = 0; index < data.length; index++) {
@@ -382,17 +382,17 @@ const a = async (req, res) => {
       .catch(err => {
         console.log(err);
       });
-    sumAll[boss[q]] = all;
+    // sumAll[boss[q]] = all;
   }
-  allAll['БоСС'] = sumAll;
+  allAll['БоСС'] = all;
+  (sent = 0),
+    (seen = 0),
+    (pending = 0),
+    (done = 0),
+    (reject = 0),
+    (thanks = 0),
+    (all = {});
   for (let q = 0; q < nhus.length; q++) {
-    let sent = 0,
-      seen = 0,
-      pending = 0,
-      done = 0,
-      reject = 0,
-      thanks = 0;
-    let all = {};
     await Post.find()
       .then(data => {
         for (let index = 0; index < data.length; index++) {
@@ -422,9 +422,9 @@ const a = async (req, res) => {
       .catch(err => {
         console.log(err);
       });
-    sumAll[nhus[q]] = all;
+    // sumAll[nhus[q]] = all;
   }
-  allAll['НХУС'] = sumAll;
+  allAll['НХУС'] = all;
   return res.json(message.SUCCESS(allAll));
 };
 
