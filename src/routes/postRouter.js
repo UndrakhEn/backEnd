@@ -20,6 +20,7 @@ router.post('/create', postControllers.create);
 // to update a post
 router.post('/update', postControllers.update);
 router.post('/update/perforCode', postControllers.updatePerforCode);
+router.post('/datePost', postControllers.datePost);
 //make delete
 router.post('/delete', postControllers.deletee);
 

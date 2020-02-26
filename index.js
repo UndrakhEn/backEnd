@@ -30,12 +30,6 @@ app.use((req, res, next) => {
 });
 
 app.use(
-  bodyParser.json({
-    limit: '10mb'
-  })
-);
-
-app.use(
   bodyParser.urlencoded({
     limit: '10mb',
     parameterLimit: 50,

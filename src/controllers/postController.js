@@ -37,6 +37,7 @@ const getStudent = (req, res) => {
       return res.json(message.ERROR);
     });
 };
+
 const getThanks = (req, res) => {
   let public = [];
   Post.find({ is_thanks: true })
@@ -547,6 +548,31 @@ const update = (req, res) => {
     });
 };
 
+const datePost = (req, res) => {
+  Post.find()
+    .then(post => {
+      for (let index = 0; index < post.length; index++) {
+        var GivenDate = post[index].deadline;
+        var CurrentDate = new Date();
+        GivenDate = new Date(GivenDate);
+        if (GivenDate < CurrentDate && post[index].perfor_code != 'done') {
+          post[index].perfor_code = 'reject';
+        }
+        post[index]
+          .save()
+          .then(post => {
+            res.json(message.SUCCESS(post));
+          })
+          .catch(err => {
+            console.log(err);
+            return res.json(message.ERROR);
+          });
+      }
+    })
+    .catch(e => {
+      return res.json(message.ERROR);
+    });
+};
 const updateLike = (req, res) => {
   let id = req.body.id;
   let a = 0;
@@ -565,7 +591,6 @@ const updateLike = (req, res) => {
           a = 1;
         }
       }
-      // post.dislike_cnt = req.body.id;
       if (a == 0) {
         post.like_cnt.push(req.body.userId);
       } else {
@@ -690,5 +715,6 @@ module.exports = {
   c,
   b1,
   b2,
-  a
+  a,
+  datePost
 };
